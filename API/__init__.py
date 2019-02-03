@@ -9,7 +9,7 @@ def create_app():
     # enable CORS
     CORS(app)
 
-    from API.plotter import plotter_blueprint
+    from API.routes import plotter_blueprint
     app.register_blueprint(plotter_blueprint)
 
     # shell context for flask cli
