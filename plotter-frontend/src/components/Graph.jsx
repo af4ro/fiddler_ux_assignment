@@ -15,11 +15,13 @@ export default class Graph extends React.Component {
     super(props);
     this.state = {
       data: [],
-      col_x: "annual_inc", 
-      col_y: "int_rate",
-      canvas_width: 900,
-      canvas_height: 500
+      col_x: this.props.col_x, 
+      col_y: this.props.col_y,
+      canvas_width: 1200,
+      canvas_height: 500,
+      ticks: 7
     };
+    this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
   }
 
   getData = (col_x, col_y) => {
@@ -36,7 +38,17 @@ export default class Graph extends React.Component {
   }
 
   componentDidMount(){
+    this.updateWindowDimensions();
+    window.addEventListener('resize', this.updateWindowDimensions);
     this.update()
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.updateWindowDimensions);
+  }
+
+  updateWindowDimensions() {
+    this.setState({ canvas_width: window.innerWidth - 100, canvas_height: window.innerHeight / 2 });
   }
 
   update(){
@@ -48,10 +60,10 @@ export default class Graph extends React.Component {
   return (
     <div className="plot-wrapper">
       <XYPlot width={this.state.canvas_width} height={this.state.canvas_height}>
-        <VerticalGridLines />
-        <HorizontalGridLines />
-        <XAxis title={this.state.col_x} tickTotal={5}/>
-        <YAxis title={this.state.col_y} tickTotal={5}/>
+        <XAxis title={this.state.col_x} tickTotal={this.state.ticks}/>
+        <YAxis title={this.state.col_y} tickTotal={this.state.ticks}/>
+        <VerticalGridLines tickTotal={this.state.ticks}/>
+        <HorizontalGridLines tickTotal={this.state.ticks}/>
         <MarkSeries
           className="mark-series-example"
           // strokeWidth={1}

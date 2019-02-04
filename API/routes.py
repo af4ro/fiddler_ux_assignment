@@ -17,17 +17,17 @@ def read_data():
     post_data = request.get_json()
     try:
         filename = post_data.get('filename')
-        limit = post_data.get('limit')
+        limit = int(post_data.get('limit'))
         csv_loader.read_data_from_csv(filename, limit)
         return jsonify({'status': 'success'}), 200
     except:
         return jsonify({'status': 'failure'}), 404
 
 
-@plotter_blueprint.route('/getcol/<col_name>', methods=['GET'])
-def get_column(col_name):
+@plotter_blueprint.route('/getcols', methods=['GET'])
+def get_columns():
     try:
-        col_values = csv_loader.get_column_values(col_name)
+        col_values = csv_loader.get_columns()
         return jsonify({
             'status': 'success',
             'data': col_values

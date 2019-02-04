@@ -27,6 +27,8 @@ class CsvLoader:
     def get_column_values(self, col_name):
         return self.data[col_name]
 
+    def get_columns(self):
+        return list(self.data.keys())
 
 if __name__ == "__main__":
     plot = CsvLoader()
