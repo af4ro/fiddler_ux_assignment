@@ -6,7 +6,7 @@ import CardDashboard from './components/CardDashboard';
 class App extends Component {
   render() {
     return (
-      <div className="App">
+      <div className="App" >
         <CardDashboard></CardDashboard>
       </div>
       // <div className="App">

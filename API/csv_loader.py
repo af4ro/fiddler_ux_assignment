@@ -8,6 +8,7 @@ class CsvLoader:
 
     def read_data_from_csv(self, filename, limit):
         col_names = []
+        self.data = defaultdict(list)
         with open(filename, newline='') as csv_file:
             file = csv.reader(csv_file)
             first = True

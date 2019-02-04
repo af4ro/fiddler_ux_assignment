@@ -14,7 +14,11 @@ export default class Graph extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: []
+      data: [],
+      col_x: "annual_inc", 
+      col_y: "int_rate",
+      canvas_width: 900,
+      canvas_height: 500
     };
   }
 
@@ -36,24 +40,26 @@ export default class Graph extends React.Component {
   }
 
   update(){
-    this.getData("annual_inc", "int_rate")
+    this.getData(this.state.col_x, this.state.col_y)
     console.log("Data", this.state.data)
   }
 
   render(){
   return (
-    <XYPlot width={1200} height={500}>
-      <VerticalGridLines />
-      <HorizontalGridLines />
-      <XAxis />
-      <YAxis />
-      <MarkSeries
-        className="mark-series-example"
-        // strokeWidth={1}
-        opacity="0.8"
-        // sizeRange={[5, 15]}
-        data={this.state.data}
-      />
-    </XYPlot>
+    <div className="plot-wrapper">
+      <XYPlot width={this.state.canvas_width} height={this.state.canvas_height}>
+        <VerticalGridLines />
+        <HorizontalGridLines />
+        <XAxis title={this.state.col_x} tickTotal={5}/>
+        <YAxis title={this.state.col_y} tickTotal={5}/>
+        <MarkSeries
+          className="mark-series-example"
+          // strokeWidth={1}
+          opacity="0.8"
+          // sizeRange={[1, 4]}
+          data={this.state.data}
+        />
+      </XYPlot>
+    </div>
   )};
 }

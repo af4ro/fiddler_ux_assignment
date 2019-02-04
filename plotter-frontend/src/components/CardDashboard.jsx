@@ -11,7 +11,7 @@ import Graph from './Graph'
 const styles = {
   card: {
     minWidth: 275,
-    margin: '2em'
+    margin: '2em',
   },
   title: {
     fontSize: 18,
