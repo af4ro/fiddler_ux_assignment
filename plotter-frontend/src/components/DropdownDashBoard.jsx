@@ -6,6 +6,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import axios from 'axios'
 import Graph from './Graph'
+import Divider from '@material-ui/core/Divider';
 
 const styles = theme => ({
     textField: {
@@ -15,7 +16,7 @@ const styles = theme => ({
     },
     menu: {
       width: 200,
-    },
+    }
   });
 
 
@@ -70,6 +71,7 @@ class DropdownDashBoard extends React.Component{
         const { classes } = this.props;
         return(
             <div>
+                <Divider/>
                 <div>
                     <TextField
                         id="standard-select-filename"
@@ -111,6 +113,7 @@ class DropdownDashBoard extends React.Component{
                         Submit
                     </Button>
                 </div>
+                <Divider style={{marginTop: '1em'}}/>
                 <div>
                     <TextField
                         id="standard-select-col-x"
@@ -159,8 +162,8 @@ class DropdownDashBoard extends React.Component{
                         Plot
                     </Button>
                 </div>
-                <div>
-                     {this.state.plot === 1 && <Graph col_x={this.state.col_x} col_y={this.state.col_y}></Graph>}
+                <div style={{marginTop: '2em'}}>
+                     {this.state.plot === 1 && <Graph col_x={this.state.col_x} col_y={this.state.col_y} />}
                 </div>
             </div>
         )

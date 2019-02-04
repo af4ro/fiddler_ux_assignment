@@ -17,8 +17,8 @@ export default class Graph extends React.Component {
       data: [],
       col_x: this.props.col_x, 
       col_y: this.props.col_y,
-      canvas_width: 1200,
-      canvas_height: 500,
+      canvas_width: 0,
+      canvas_height: 0,
       ticks: 7
     };
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
