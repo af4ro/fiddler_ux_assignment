@@ -41,17 +41,21 @@ def get_values(col_x, col_y):
     try:
         col_x = csv_loader.get_column_values(col_x)
         col_y = csv_loader.get_column_values(col_y)
+        yflag = 0
         result = []
         for i in range(len(col_x)):
             try:
                 x = float(col_x[i])
                 y = float(col_y[i])
+                if y >= 10000:
+                    yflag = 1
                 result.append({'x': x, 'y': y})
             except ValueError:
                 pass
         return jsonify({
             'status': 'success',
-            'data': result
+            'data': result,
+            'yflag': yflag
         }), 200
     except:
         return jsonify({'status': 'failure'}), 404

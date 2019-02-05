@@ -9,7 +9,7 @@ import DropdownDashBoard from './DropdownDashBoard'
 const styles = {
   card: {
     minWidth: 275,
-    margin: '2em',
+    margin: '2em'
   },
   title: {
     fontSize: 18,
@@ -24,12 +24,12 @@ function CardDashboard(props) {
   const { classes } = props;
 
   return (
-    <Card className={classes.card}>
+    <Card className={classes.card} elevation={7}>
       <CardContent>
-        <Typography className={classes.title} >
+        <Typography className={classes.title}>
           Analytics
         </Typography>
-        <DropdownDashBoard></DropdownDashBoard>
+        <DropdownDashBoard />
         {/* <Graph></Graph> */}
       </CardContent>
     </Card>

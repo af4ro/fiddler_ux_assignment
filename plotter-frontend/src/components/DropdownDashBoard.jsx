@@ -7,6 +7,7 @@ import Button from '@material-ui/core/Button';
 import axios from 'axios'
 import Graph from './Graph'
 import Divider from '@material-ui/core/Divider';
+import Snackbar from '@material-ui/core/Snackbar';
 
 const styles = theme => ({
     textField: {
@@ -30,7 +31,10 @@ class DropdownDashBoard extends React.Component{
             limit: '',
             filename: 'test.csv',
             filenames: ['test.csv'],
-            plot: 0
+            snacktext: "CSV file read!",
+            plot: 0,
+            snackopen: false,
+            disable_buttons: true
         };
     }
 
@@ -43,23 +47,40 @@ class DropdownDashBoard extends React.Component{
 
     handleSubmit = () => {
         console.log( this.state.filename, this.state.limit)
-        this.setState({ plot: 0 })
+        
         axios.post(`http://127.0.0.1:5000/readcsv`,{
             filename: this.state.filename,
             limit: this.state.limit
         })
-        .then(obj => console.log(obj))
+        .then(obj => {
+            // console.log(obj.data)
+            if (obj.data.status === "success"){
+                this.setState({ 
+                    plot: 0,
+                    snackopen: true,
+                    snacktext: "CSV file read!",
+                    disable_buttons: false
+                })
+            }
+        })
         .then(() => {
             return axios.get(`http://127.0.0.1:5000/getcols`)
         })
         .then(obj => {
             console.log("Inner Data", obj.data)
             if (obj.data.status === "success"){
-                this.setState({ columns: obj.data.data })
+                this.setState({ 
+                    columns: obj.data.data 
+                })
             }
         })
         .catch(error => {
             console.log(error)
+            console.log("Reading error")
+                this.setState({ 
+                    snackopen: true,
+                    snacktext: "Error reading CSV"
+                })
         });
     }
 
@@ -67,17 +88,28 @@ class DropdownDashBoard extends React.Component{
         this.setState({ plot: 1 })
     }
 
+    handleClose = () => {
+        this.setState({ snackopen: false })
+    }
+
     render(){
         const { classes } = this.props;
+        var buttonsDisabled = {}
+        if (this.state.disable_buttons){
+            buttonsDisabled = { disabled: this.state.disable_buttons}
+        }
+        
         return(
             <div>
-                <Divider/>
-                <div>
+                <Divider style={{marginBottom: '1em'}}/>
+                <div style={{display: 'flex'}}>
+                <div style={{flexGrow: 1}}>
                     <TextField
                         id="standard-select-filename"
                         select
                         label="Dataset"
                         className={classes.textField}
+                        variant="outlined"
                         value={this.state.filename}
                         onChange={this.handleChange('filename')}
                         SelectProps={{
@@ -99,6 +131,7 @@ class DropdownDashBoard extends React.Component{
                         onChange={this.handleChange('limit')}
                         type="number"
                         className={classes.textField}
+                        variant="outlined"
                         InputLabelProps={{
                             shrink: true,
                         }}
@@ -112,15 +145,26 @@ class DropdownDashBoard extends React.Component{
                         onClick={this.handleSubmit}>
                         Submit
                     </Button>
+                    <Snackbar
+                        open={this.state.snackopen}
+                        onClose={this.handleClose}
+                        autoHideDuration={4000}
+                        ContentProps={{
+                            'aria-describedby': 'message-id',
+                        }}
+                        message={<span id="message-id">{this.state.snacktext}</span>}
+                        />
                 </div>
-                <Divider style={{marginTop: '1em'}}/>
-                <div>
+                {/* <Divider style={{marginTop: '1em'}}/> */}
+                <div style={{flexGrow: 1}}>
                     <TextField
                         id="standard-select-col-x"
                         select
                         label="X axis"
                         className={classes.textField}
                         value={this.state.col_x}
+                        {...buttonsDisabled}
+                        variant="outlined"
                         onChange={this.handleChange('col_x')}
                         SelectProps={{
                             MenuProps: {
@@ -138,8 +182,10 @@ class DropdownDashBoard extends React.Component{
                         id="standard-select-col-y"
                         select
                         label="Y axis"
+                        {...buttonsDisabled}
                         className={classes.textField}
                         value={this.state.col_y}
+                        variant="outlined"
                         onChange={this.handleChange('col_y')}
                         SelectProps={{
                             MenuProps: {
@@ -157,10 +203,12 @@ class DropdownDashBoard extends React.Component{
                         style={{marginTop: '2em'}}
                         variant="contained"
                         color="primary"
+                        {...buttonsDisabled}
                         className={classes.button}
                         onClick={this.handlePlot}>
                         Plot
                     </Button>
+                </div>
                 </div>
                 <div style={{marginTop: '2em'}}>
                      {this.state.plot === 1 && <Graph col_x={this.state.col_x} col_y={this.state.col_y} />}
